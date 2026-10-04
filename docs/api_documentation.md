@@ -1,4 +1,4 @@
-# API Documentation — Athena AI/CS Study Assistant
+# API Documentation - Athena AI/CS Study Assistant
 
 The Athena backend provides versioned REST and Server-Sent Events (SSE) endpoints under `/api/v1`.
 Interactive Swagger UI is also available at `http://localhost:8000/docs`.
