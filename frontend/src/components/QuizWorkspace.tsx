@@ -15,6 +15,7 @@ import { generateQuiz, submitQuiz } from '../api';
 export const QuizWorkspace: React.FC = () => {
   const [topic, setTopic] = useState('Binary Search Trees');
   const [level, setLevel] = useState<LearningLevel>('intermediate');
+  const [questionCount, setQuestionCount] = useState<number>(5);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [quizData, setQuizData] = useState<{ quiz_id: string; topic: string; questions: QuizQuestion[] } | null>(null);
@@ -27,7 +28,7 @@ export const QuizWorkspace: React.FC = () => {
       setLoading(true);
       setResult(null);
       setSelectedAnswers({});
-      const data = await generateQuiz(topic, level, 3);
+      const data = await generateQuiz(topic, level, questionCount);
       setQuizData(data);
     } catch (err) {
       console.error(err);
@@ -106,6 +107,28 @@ export const QuizWorkspace: React.FC = () => {
                   }`}
                 >
                   {lvl}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-charcoal-300 mb-1.5">
+              Number of Questions
+            </label>
+            <div className="flex bg-charcoal-850 rounded-lg p-0.5 border border-charcoal-700">
+              {[5, 10, 15, 20].map((count) => (
+                <button
+                  key={count}
+                  type="button"
+                  onClick={() => setQuestionCount(count)}
+                  className={`text-xs px-2.5 py-1.5 rounded-md font-medium transition-all ${
+                    questionCount === count
+                      ? 'bg-charcoal-700 text-gold-light'
+                      : 'text-charcoal-400 hover:text-charcoal-200'
+                  }`}
+                >
+                  {count}
                 </button>
               ))}
             </div>
