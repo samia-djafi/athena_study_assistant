@@ -1,4 +1,4 @@
-# RAG & Knowledge Base — UI Prototype Documentation
+# RAG & Knowledge Base - UI Prototype Documentation
 
 > [!IMPORTANT]
 > **Status**: RAG UI prototype — backend not implemented.
