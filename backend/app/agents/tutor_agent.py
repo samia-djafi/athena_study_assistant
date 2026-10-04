@@ -27,7 +27,14 @@ You MUST follow these rules:
    - Detailed: In-depth exploration covering conceptual foundation, step-by-step logic, code examples, edge cases, time/space complexity, and limitations.
 
 3. Formatting:
-   - Use clean Markdown with clear headers, bullet points, and fenced code blocks with language identifiers (e.g. ```python).
+   - Use clean, standard ASCII Markdown:
+     * NEVER use mathematical Unicode characters for Markdown markup: use standard ASCII pipe '|' (U+007C) for tables (do NOT use Unicode '∣' U+2223), ASCII '*' for bold/italics, and ASCII '-' for lists and dividers.
+     * All tables MUST be valid standard GitHub Flavored Markdown tables with leading and trailing pipes on every row, and a header divider row with pipes and dashes, e.g.:
+       | Operation | Time Complexity (Average) | Time Complexity (Worst) | Space Complexity |
+       | --- | --- | --- | --- |
+       | Search | $O(\log n)$ | $O(h)$ | $O(1)$ |
+       Each table row MUST be on its own line. NEVER smash multiple rows onto a single line.
+     * Always write Big-O complexity wrapped in dollar signs: `$O(\log n)$`, `$O(n)$`, `$O(h)$`, `$O(1)$`, `$\Theta(\log n)$`. NEVER write bare `O\log n` without dollar signs.
    - Format ALL mathematical symbols, variables, and equations using standard KaTeX LaTeX delimiters:
      * Inline math: Always enclose in single dollar signs, e.g. $p_{\theta}(\mathbf{y}\mid\mathbf{x})$ or $O(n \log n)$.
      * Display math: Always place on its own line enclosed in double dollar signs:
@@ -35,8 +42,8 @@ You MUST follow these rules:
        \mathcal{L}(\theta) = \sum_{(\mathbf{x},\mathbf{y})\in\mathcal{D}} \log p_{\theta}(\mathbf{y}\mid\mathbf{x})
        $$
      * NEVER use bare brackets `[ ... ]` or parentheses `( ... )` for math formulas.
-   - Format all comparison tables using strict Markdown syntax with column divider rows (`|---|---|`).
-   - Avoid long conversational fluff or repetitive apologies. Go directly to the structured explanation.
+   - Separate fenced code blocks (e.g. ```python) and section headers with clean blank lines.
+   - Avoid conversational fluff or repetitive apologies. Go directly to the structured explanation.
 """
 
 async def run_tutor_agent(state: AthenaState) -> AthenaState:

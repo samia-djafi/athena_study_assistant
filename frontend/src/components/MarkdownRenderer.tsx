@@ -21,77 +21,118 @@ function normalizeMarkdownContent(raw: string): string {
 
   let text = raw;
 
-  // 1. Fix "python\n\nCopy\n" artifact from model outputs
+  // 1. UNICODE NORMALIZATION:
+  // Convert mathematical/typographic lookalikes to standard ASCII markdown:
+  // - Unicode vertical bars: ∣ (U+2223 divides), │ (U+2502 box vertical), ｜ (U+FF5C fullwidth) -> ASCII '|'
+  text = text.replace(/[\u2223\u2502\uff5c]/g, '|');
+
+  // - Unicode asterisks: ∗ (U+2217 asterisk operator), ﹡ (U+FE61), ＊ (U+FF0A) -> ASCII '*'
+  text = text.replace(/[\u2217\ufe61\uff0a]/g, '*');
+
+  // - Non-breaking hyphens (U+2011) -> ASCII '-'
+  text = text.replace(/\u2011/g, '-');
+
+  // - Unicode minuses & dashes (minus − U+2212, em-dash — U+2014, en-dash – U+2013) in dividers
+  text = text.replace(/(?:^|\n)\s*[−—–-]{3,}\s*(?:\n|$)/g, '\n\n---\n\n');
+
+  // 2. Fix smashed table rows where rows are concatenated with "||" or "| |":
+  // e.g. "| O(1) | | Delete |" -> "| O(1) |\n| Delete |"
+  text = text.replace(/\|\s*\|\s*([A-Za-z0-9_*$])/g, '|\n| $1');
+
+  // 3. Fix headers crammed together with dividers or code blocks:
+  // e.g. "--- ## Example:" -> "---\n\n## Example:"
+  text = text.replace(/---\s*(#{1,4}\s+[^\n]+)/g, '---\n\n$1\n');
+  text = text.replace(/([^\n])\s*(```(?:python|py|cpp|c|java|js|ts|go|rust|bash|sql|json|markdown))/gi, '$1\n\n$2\n');
+  text = text.replace(/(```)\s*(#{1,4}\s+[^\n]+)/g, '$1\n\n$2\n');
+
+  // 4. Fix "python\n\nCopy\n" artifact from model outputs
   text = text.replace(/(?:^|\n)(?:python|py)\s*\n+Copy\s*\n+/gi, '\n```python\n');
 
-  // 2. Fix tab-separated tables into Markdown tables if present
+  // 5. Normalizing Big-O and asymptotic complexity notation outside math mode:
+  // e.g. O\log n -> $O(\log n)$
+  // h=Θ\log n -> $h = \Theta(\log n)$
+  // h=O\log n -> $h = O(\log n)$
+  // (O)logn -> $O(\log n)$
+  text = text.replace(/\(O\)\s*log\s*n/gi, '$O(\\log n)$');
+  text = text.replace(/([hkn]\s*=\s*)(?:Θ|\\Theta)\s*\\?log\s*([a-zA-Z0-9]+)/g, '$1$\\Theta(\\log $2)$');
+  text = text.replace(/([hkn]\s*=\s*)O\s*\\?log\s*([a-zA-Z0-9]+)/g, '$1$O(\\log $2)$');
+  text = text.replace(/\b(?:Θ|\\Theta)\s*\\?log\s*([a-zA-Z0-9]+)/g, '$\\Theta(\\log $1)$');
+  text = text.replace(/\bO\\log\s*([a-zA-Z0-9]+)/g, '$O(\\log $1)$');
+
+  // 6. Fix tab-separated and hybrid Markdown tables:
   const lines = text.split('\n');
   const processedLines: string[] = [];
-  let inTabTable = false;
+  let inTable = false;
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    // Check if line contains tabs with multiple columns and no pipes
-    if (line.includes('\t') && !line.includes('|')) {
+    let line = lines[i];
+
+    // If line has tabs, convert to pipe-delimited table cells
+    if (line.includes('\t')) {
       const parts = line.split('\t').map(p => p.trim()).filter(Boolean);
       if (parts.length >= 2) {
-        if (!inTabTable) {
-          inTabTable = true;
-          // Emit table header row
-          processedLines.push('| ' + parts.join(' | ') + ' |');
-          // Emit divider row
-          processedLines.push('| ' + parts.map(() => '---').join(' | ') + ' |');
-        } else {
-          // Emit table body row
-          processedLines.push('| ' + parts.join(' | ') + ' |');
+        line = '| ' + parts.join(' | ') + ' |';
+      }
+    }
+
+    // Check if line looks like a table row (starts/ends with pipe or has multiple pipes)
+    const trimmed = line.trim();
+    if (trimmed.startsWith('|') && trimmed.endsWith('|') && trimmed.length > 2) {
+      if (!inTable) {
+        inTable = true;
+        processedLines.push(line);
+        // Check if next line is already a divider row
+        const nextLine = (i + 1 < lines.length) ? lines[i + 1].trim() : '';
+        const isDivider = nextLine.startsWith('|') && /^\|[\s\-:|]+\|$/.test(nextLine);
+        if (!isDivider) {
+          // Generate appropriate divider row matching column count
+          const colCount = (line.match(/\|/g) || []).length - 1;
+          const divider = '| ' + Array(Math.max(colCount, 1)).fill('---').join(' | ') + ' |';
+          processedLines.push(divider);
         }
         continue;
       }
+      processedLines.push(line);
+      continue;
     }
-    inTabTable = false;
+
+    inTable = false;
     processedLines.push(line);
   }
   text = processedLines.join('\n');
 
-  // 3. Fix LLM artifact: variables/expressions wrapped in $ signs inside formulas
+  // 7. Fix LLM artifact: variables/expressions wrapped in $ signs inside formulas
   // e.g. \mathcal{R}_N$\boldsymbol\theta$ -> \mathcal{R}_N(\boldsymbol\theta)
-  // or R$\boldsymbol\theta$ -> R(\boldsymbol\theta)
-  // or \Omega$\theta$ -> \Omega(\theta)
-  // or f_{\theta}$\mathbf{x}_i$ -> f_{\theta}(\mathbf{x}_i)
   text = text.replace(/([A-Za-z0-9}_\\;])\s*\$\s*(\\?[A-Za-z0-9_{}^,\s]+?)\s*\$/g, '$1($2)');
-
-  // Clean $ inside subscripts and superscripts: e.g. _{$\mathbf{X},Y$\sim P_{XY}} -> _{\mathbf{X},Y\sim P_{XY}}
   text = text.replace(/([_\^]\{[^{}]*\})/g, (sub) => sub.replace(/\$/g, ''));
   text = text.replace(/_\s*\$\s*([^$\n]+?)\s*\$/g, '_{$1}');
 
-  // 4. Convert explicit LaTeX display math \[ ... \] to $$ ... $$
+  // 8. Convert explicit LaTeX display math \[ ... \] to $$ ... $$
   text = text.replace(/\\\[([\s\S]*?)\\\]/g, (_, math) => {
     const cleaned = math.replace(/\$/g, '').trim();
     return `\n$$\n${cleaned}\n$$\n`;
   });
 
-  // 5. Convert explicit LaTeX inline math \( ... \) to $ ... $
+  // 9. Convert explicit LaTeX inline math \( ... \) to $ ... $
   text = text.replace(/\\\(([\s\S]*?)\\\)/g, (_, math) => {
     const cleaned = math.replace(/\$/g, '').trim();
     return `$${cleaned}$`;
   });
 
-  // 6. Wrap standalone lines that start with un-delimited LaTeX equations:
-  // e.g. lines starting with \min, \max, \arg\min, \theta, \mathcal, \sum, \prod, \mathbb, \mathbf, \boldsymbol
+  // 10. Wrap standalone lines that start with un-delimited LaTeX equations:
+  // e.g. lines starting with \min, \max, \arg\min, \theta, \sum, \prod, \mathbb, \mathbf, \boldsymbol
   text = text.replace(
-    /(?:^|\n)\s*(\\(?:arg\\min|arg\\max|min|max|theta|mathcal|hat|sum|mathbb|prod|mathbf|boldsymbol|frac|begin|Omega|int|partial|alpha|beta|gamma|delta|sigma|lambda|nabla|forall|exists|lim|inf|sup)[^\n]+)(?:\n|$)/g,
+    /(?:^|\n)\s*(\\(?:arg\\min|arg\\max|min|max|theta|mathcal|hat|sum|mathbb|prod|mathbf|boldsymbol|frac|begin|Omega|int|partial|alpha|beta|gamma|delta|sigma|lambda|nabla|lim|inf|sup)[^\n]+)(?:\n|$)/g,
     (match, mathLine) => {
-      // Don't modify if already wrapped in $$
       if (mathLine.trim().startsWith('$$') && mathLine.trim().endsWith('$$')) {
         return match;
       }
-      // Remove accidental inner dollar signs inside this equation
       const cleaned = mathLine.replace(/\$/g, '').trim();
       return `\n\n$$\n${cleaned}\n$$\n\n`;
     }
   );
 
-  // 7. Convert standalone bracketed display math [ \command ... ] to $$ ... $$
+  // 11. Convert standalone bracketed display math [ \command ... ] to $$ ... $$
   text = text.replace(
     /(?:^|\n)\s*\[\s*([\s\S]*?\\(?:mathcal|mathbf|theta|prod|sum|frac|begin|sqrt|text|aligned|int|partial|alpha|beta|gamma|lambda|sigma|Omega|Theta|left|right|dots|circ|times|cdot|in|to|infty|min|max|boldsymbol)[\s\S]*?)\s*\]\s*(?:\n|$)/g,
     (_, math) => {
@@ -100,7 +141,7 @@ function normalizeMarkdownContent(raw: string): string {
     }
   );
 
-  // 8. Convert bracketed inline math ( \command ... ) to $ ... $
+  // 12. Convert bracketed inline math ( \command ... ) to $ ... $
   text = text.replace(
     /\(\s*(\\[A-Za-z]+(?:\{[^}]*\}|\[[^\]]*\])*[^()\n]*?)\s*\)/g,
     (_, math) => {
@@ -109,13 +150,13 @@ function normalizeMarkdownContent(raw: string): string {
     }
   );
 
-  // 9. Convert single symbols in parentheses: (\theta), (\phi), (\pi), (\epsilon), (\lambda), (\mathbf{x}), (\mathbf{y})
+  // 13. Convert single symbols in parentheses: (\theta), (\phi), (\pi), (\epsilon), (\lambda), (\mathbf{x}), (\mathbf{y})
   text = text.replace(
     /\(\s*(\\theta|\\phi|\\pi|\\epsilon|\\lambda|\\mu|\\sigma|\\alpha|\\beta|\\gamma|\\delta|\\eta|\\tau|\\omega|\\mathbf\{[A-Za-z0-9]+\}|[A-Za-z]_[A-Za-z0-9]+)\s*\)/g,
     '$$$1$$'
   );
 
-  // 10. Global sanitization pass on all $$ ... $$ display blocks:
+  // 14. Global sanitization pass on all $$ ... $$ display blocks:
   // Remove any remaining '$' inside display math (strictly illegal in KaTeX/LaTeX math mode)
   text = text.replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => {
     let cleaned = math.replace(/([A-Za-z0-9}_\\;])\s*\$\s*(\\?[A-Za-z0-9_{}^,\s]+?)\s*\$/g, '$1($2)');
