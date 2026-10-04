@@ -213,12 +213,12 @@ For local development, Athena creates and manages `athena.db` using SQLite and `
 
 ## Documentation Index
 
-- [docs/architecture.md](docs/architecture.md) — System topology, component boundaries, and Mermaid diagrams.
-- [docs/agent_design.md](docs/agent_design.md) — Shared state schema, routing rules, and agent definitions.
-- [docs/rag_pipeline.md](docs/rag_pipeline.md) — UI prototype documentation and future vector architecture roadmap.
-- [docs/database_schema.md](docs/database_schema.md) — Database ERD, table definitions, and Supabase SQL migrations.
-- [docs/api_documentation.md](docs/api_documentation.md) — REST and SSE streaming endpoints, request/response payloads.
-- [docs/evaluation.md](docs/evaluation.md) — 17-point test matrix and QA validation report.
+- [docs/architecture.md](docs/architecture.md) - System topology, component boundaries, and Mermaid diagrams.
+- [docs/agent_design.md](docs/agent_design.md) - Shared state schema, routing rules, and agent definitions.
+- [docs/rag_pipeline.md](docs/rag_pipeline.md) - UI prototype documentation and future vector architecture roadmap.
+- [docs/database_schema.md](docs/database_schema.md) - Database ERD, table definitions, and Supabase SQL migrations.
+- [docs/api_documentation.md](docs/api_documentation.md) - REST and SSE streaming endpoints, request/response payloads.
+- [docs/evaluation.md](docs/evaluation.md) - 17-point test matrix and QA validation report.
 
 ---
 
