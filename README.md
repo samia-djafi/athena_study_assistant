@@ -224,12 +224,16 @@ For local development, Athena creates and manages `athena.db` using SQLite and `
 
 ## Author
 
-**Samia DJAFI**  
-AI Engineering Student | UMMTO  
-Thirduni Program Participant
+**SAMIA DJAFI**  
+AI Engineering Student · UMMTO  
 
-This project was developed as part of my learning journey in Artificial Intelligence through the **Thirduni Program**, in collaboration with the U.S. Embassy in Algeria.
+**Thirduni Program · 2026**               
+*This project was developed as part of my learning journey in Artificial Intelligence through the **Thirduni Program**, in collaboration with the U.S. Embassy in Algeria.*
 
-Built with curiosity, experimentation, and a focus on understanding how AI agents, tools, and conversational memory work together.
+![AI Agents](https://img.shields.io/badge/🤖_AI_Agents-2F3E46?style=flat-square)
+![Tool Integration](https://img.shields.io/badge/🛠️_Tool_Integration-354F52?style=flat-square)
+![Conversational Memory](https://img.shields.io/badge/🧠_Conversational_Memory-52796F?style=flat-square)
 
-**DJAFI Samia** · 2026
+*Exploring the intersection of Artificial Intelligence, engineering, and innovation.*
+
+**© 2026 · Samia DJAFI**
