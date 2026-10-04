@@ -1,4 +1,4 @@
-# System Architecture — Athena AI/CS Study Assistant
+# System Architecture - Athena AI/CS Study Assistant
 
 Athena is designed as a modular, production-ready, multi-agent learning platform centered around a stateful LangGraph orchestrator, an asynchronous FastAPI backend, and a modern React 19 / Tailwind CSS frontend.
 
