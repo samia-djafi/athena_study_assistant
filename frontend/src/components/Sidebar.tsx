@@ -8,7 +8,8 @@ import {
   Plus,
   Trash2,
   Sparkles,
-  GraduationCap
+  GraduationCap,
+  X
 } from 'lucide-react';
 import { SessionItem, LearnerProfile } from '../types';
 
@@ -22,6 +23,8 @@ interface SidebarProps {
   onDeleteSession: (id: string) => void;
   onOpenSettings: () => void;
   learnerProfile?: LearnerProfile;
+  isOpenMobile?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -33,10 +36,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onNewSession,
   onDeleteSession,
   onOpenSettings,
-  learnerProfile
+  learnerProfile,
+  isOpenMobile = false,
+  onCloseMobile
 }) => {
   return (
-    <aside className="w-64 bg-charcoal-900 border-r border-charcoal-700/60 flex flex-col h-screen select-none">
+    <aside
+      className={`fixed inset-y-0 left-0 z-50 w-72 bg-charcoal-900 border-r border-charcoal-700/60 flex flex-col h-screen select-none transition-transform duration-300 ease-in-out md:static md:w-64 md:translate-x-0 ${
+        isOpenMobile ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+      }`}
+    >
       {/* Brand Header */}
       <div className="p-4 border-b border-charcoal-800 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
@@ -51,12 +60,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <p className="text-[11px] text-charcoal-400">Study Assistant</p>
           </div>
         </div>
+
+        {onCloseMobile && (
+          <button
+            onClick={onCloseMobile}
+            className="md:hidden p-1.5 text-charcoal-400 hover:text-charcoal-100 rounded-lg hover:bg-charcoal-800 transition-colors"
+            title="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Main Navigation */}
       <nav className="p-3 space-y-1">
         <button
-          onClick={() => setCurrentTab('chat')}
+          onClick={() => {
+            setCurrentTab('chat');
+            onCloseMobile?.();
+          }}
           className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-medium transition-colors ${
             currentTab === 'chat'
               ? 'bg-charcoal-800 text-gold-light border border-gold/20'
@@ -68,7 +90,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
 
         <button
-          onClick={() => setCurrentTab('knowledge')}
+          onClick={() => {
+            setCurrentTab('knowledge');
+            onCloseMobile?.();
+          }}
           className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-medium transition-colors ${
             currentTab === 'knowledge'
               ? 'bg-charcoal-800 text-gold-light border border-gold/20'
@@ -81,7 +106,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
 
         <button
-          onClick={() => setCurrentTab('quiz')}
+          onClick={() => {
+            setCurrentTab('quiz');
+            onCloseMobile?.();
+          }}
           className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-medium transition-colors ${
             currentTab === 'quiz'
               ? 'bg-charcoal-800 text-gold-light border border-gold/20'
@@ -93,7 +121,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
 
         <button
-          onClick={() => setCurrentTab('dashboard')}
+          onClick={() => {
+            setCurrentTab('dashboard');
+            onCloseMobile?.();
+          }}
           className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-medium transition-colors ${
             currentTab === 'dashboard'
               ? 'bg-charcoal-800 text-gold-light border border-gold/20'
@@ -108,7 +139,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* New Session Button */}
       <div className="px-3 pt-2">
         <button
-          onClick={onNewSession}
+          onClick={() => {
+            onNewSession();
+            onCloseMobile?.();
+          }}
           className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-xs font-medium bg-gold/15 text-gold-light border border-gold/30 hover:bg-gold/25 transition-all shadow-sm"
         >
           <Plus className="w-4 h-4" />
@@ -136,6 +170,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => {
                   setCurrentTab('chat');
                   onSelectSession(sess.id);
+                  onCloseMobile?.();
                 }}
               >
                 <span className="truncate pr-2 font-normal">{sess.title || 'CS Session'}</span>
@@ -170,7 +205,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
           <button
-            onClick={onOpenSettings}
+            onClick={() => {
+              onOpenSettings();
+              onCloseMobile?.();
+            }}
             className="p-1.5 rounded-md text-charcoal-400 hover:text-charcoal-100 hover:bg-charcoal-800 transition-colors"
             title="Settings"
           >

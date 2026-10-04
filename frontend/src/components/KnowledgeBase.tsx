@@ -70,11 +70,11 @@ export const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({
   return (
     <div className="flex-1 flex flex-col h-screen bg-charcoal-950 overflow-y-auto">
       {/* Header */}
-      <header className="p-6 border-b border-charcoal-800 bg-charcoal-900/60">
-        <div className="flex items-center justify-between max-w-5xl mx-auto">
+      <header className="p-4 sm:p-6 border-b border-charcoal-800 bg-charcoal-900/60">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 items-start sm:items-center justify-between max-w-5xl mx-auto">
           <div>
-            <h1 className="text-lg font-semibold text-charcoal-100 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-gold" />
+            <h1 className="text-base sm:text-lg font-semibold text-charcoal-100 flex flex-wrap items-center gap-2">
+              <FileText className="w-5 h-5 text-gold flex-shrink-0" />
               <span>Study Materials & Knowledge Base</span>
               <span className="text-xs px-2 py-0.5 rounded-full bg-gold/15 text-gold-light border border-gold/30 font-mono">
                 RAG UI Prototype
@@ -86,7 +86,7 @@ export const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({
           </div>
           <button
             onClick={onRefreshDocs}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-charcoal-800 hover:bg-charcoal-700 text-charcoal-300 text-xs transition-colors border border-charcoal-700"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-charcoal-800 hover:bg-charcoal-700 text-charcoal-300 text-xs transition-colors border border-charcoal-700 self-end sm:self-auto"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Refresh</span>
@@ -94,9 +94,9 @@ export const KnowledgeBase: React.FC<KnowledgeBaseProps> = ({
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto w-full p-6 space-y-6">
+      <div className="max-w-5xl mx-auto w-full p-3 sm:p-6 space-y-4 sm:space-y-6 pb-20 md:pb-6">
         {/* Specification Required Notice Banner */}
-        <div className="p-4 rounded-xl bg-charcoal-900 border border-gold/30 flex items-start gap-3">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-charcoal-900 border border-gold/30 flex items-start gap-3">
           <Info className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
           <div className="text-xs text-charcoal-300 leading-relaxed">
             <span className="font-semibold text-gold-light block mb-1">

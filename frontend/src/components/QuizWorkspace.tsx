@@ -61,11 +61,11 @@ export const QuizWorkspace: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col h-screen bg-charcoal-950 overflow-y-auto">
       {/* Header */}
-      <header className="p-6 border-b border-charcoal-800 bg-charcoal-900/60">
+      <header className="p-4 sm:p-6 border-b border-charcoal-800 bg-charcoal-900/60">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold text-charcoal-100 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-gold" />
+            <h1 className="text-base sm:text-lg font-semibold text-charcoal-100 flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-gold flex-shrink-0" />
               <span>Assessment & Practice Quizzes</span>
             </h1>
             <p className="text-xs text-charcoal-400 mt-1">
@@ -75,10 +75,10 @@ export const QuizWorkspace: React.FC = () => {
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto w-full p-6 space-y-6">
+      <div className="max-w-4xl mx-auto w-full p-3 sm:p-6 space-y-4 sm:space-y-6 pb-20 md:pb-6">
         {/* Quiz Configuration Panel */}
-        <div className="p-5 rounded-xl bg-charcoal-900 border border-charcoal-800 flex flex-wrap items-end gap-4">
-          <div className="flex-1 min-w-[240px]">
+        <div className="p-4 sm:p-5 rounded-xl bg-charcoal-900 border border-charcoal-800 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-3 sm:gap-4">
+          <div className="flex-1 min-w-[200px]">
             <label className="block text-xs font-medium text-charcoal-300 mb-1.5">
               CS / AI Topic
             </label>
@@ -95,12 +95,12 @@ export const QuizWorkspace: React.FC = () => {
             <label className="block text-xs font-medium text-charcoal-300 mb-1.5">
               Difficulty Level
             </label>
-            <div className="flex bg-charcoal-850 rounded-lg p-0.5 border border-charcoal-700">
+            <div className="flex bg-charcoal-850 rounded-lg p-0.5 border border-charcoal-700 overflow-x-auto no-scrollbar">
               {(['beginner', 'intermediate', 'advanced'] as LearningLevel[]).map((lvl) => (
                 <button
                   key={lvl}
                   onClick={() => setLevel(lvl)}
-                  className={`text-xs px-3 py-1.5 rounded-md capitalize font-medium transition-all ${
+                  className={`text-xs px-2.5 sm:px-3 py-1.5 rounded-md capitalize font-medium transition-all ${
                     level === lvl
                       ? 'bg-charcoal-700 text-gold-light'
                       : 'text-charcoal-400 hover:text-charcoal-200'
@@ -122,7 +122,7 @@ export const QuizWorkspace: React.FC = () => {
                   key={count}
                   type="button"
                   onClick={() => setQuestionCount(count)}
-                  className={`text-xs px-2.5 py-1.5 rounded-md font-medium transition-all ${
+                  className={`text-xs px-2.5 sm:px-3 py-1.5 rounded-md font-medium transition-all ${
                     questionCount === count
                       ? 'bg-charcoal-700 text-gold-light'
                       : 'text-charcoal-400 hover:text-charcoal-200'
@@ -137,7 +137,7 @@ export const QuizWorkspace: React.FC = () => {
           <button
             onClick={handleGenerate}
             disabled={loading || !topic.trim()}
-            className="px-4 py-2 rounded-lg bg-gold text-charcoal-950 font-medium text-xs hover:bg-gold-light transition-all shadow-sm flex items-center gap-1.5 disabled:opacity-50"
+            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-lg bg-gold text-charcoal-950 font-medium text-xs hover:bg-gold-light transition-all shadow-sm flex items-center justify-center gap-1.5 disabled:opacity-50"
           >
             {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
             <span>Generate Practice Quiz</span>
@@ -153,8 +153,8 @@ export const QuizWorkspace: React.FC = () => {
             </div>
 
             {quizData.questions.map((q, idx) => (
-              <div key={q.id} className="p-5 rounded-xl bg-charcoal-900 border border-charcoal-800 space-y-3">
-                <div className="text-xs font-medium text-charcoal-200 leading-relaxed">
+              <div key={q.id} className="p-4 sm:p-5 rounded-xl bg-charcoal-900 border border-charcoal-800 space-y-3">
+                <div className="text-xs sm:text-sm font-medium text-charcoal-200 leading-relaxed">
                   <span className="text-gold mr-2 font-mono">Q{idx + 1}.</span>
                   {q.question}
                 </div>
@@ -164,13 +164,13 @@ export const QuizWorkspace: React.FC = () => {
                     <button
                       key={optIdx}
                       onClick={() => handleSelectOption(q.id, opt)}
-                      className={`w-full text-left p-2.5 rounded-lg text-xs transition-colors border flex items-center gap-2.5 ${
+                      className={`w-full text-left p-2.5 sm:p-3 rounded-lg text-xs transition-colors border flex items-center gap-2.5 ${
                         selectedAnswers[q.id] === opt
                           ? 'bg-charcoal-800 border-gold/60 text-gold-light'
                           : 'bg-charcoal-850/60 border-charcoal-800 text-charcoal-300 hover:bg-charcoal-800'
                       }`}
                     >
-                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center text-[10px] font-mono ${
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center text-[10px] font-mono flex-shrink-0 ${
                         selectedAnswers[q.id] === opt
                           ? 'border-gold bg-gold/20 text-gold-light'
                           : 'border-charcoal-600 text-charcoal-500'
@@ -188,7 +188,7 @@ export const QuizWorkspace: React.FC = () => {
               <button
                 onClick={handleSubmit}
                 disabled={submitting || Object.keys(selectedAnswers).length === 0}
-                className="px-5 py-2.5 rounded-lg bg-gold text-charcoal-950 font-medium text-xs hover:bg-gold-light transition-all shadow-sm flex items-center gap-1.5 disabled:opacity-50"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-gold text-charcoal-950 font-medium text-xs hover:bg-gold-light transition-all shadow-sm flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 {submitting ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
                 <span>Submit & View Diagnostic Feedback</span>
@@ -199,12 +199,12 @@ export const QuizWorkspace: React.FC = () => {
 
         {/* Results & Detailed Review */}
         {result && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Score Summary Card */}
-            <div className="p-6 rounded-xl bg-charcoal-900 border border-gold/40 flex items-center justify-between">
+            <div className="p-4 sm:p-6 rounded-xl bg-charcoal-900 border border-gold/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <div className="text-xs uppercase font-mono text-gold tracking-wider mb-1">Assessment Complete</div>
-                <h3 className="text-xl font-semibold text-charcoal-100">
+                <h3 className="text-lg sm:text-xl font-semibold text-charcoal-100">
                   Score: {result.score} / {result.total} ({result.percentage}%)
                 </h3>
                 <p className="text-xs text-charcoal-400 mt-1">
@@ -218,7 +218,7 @@ export const QuizWorkspace: React.FC = () => {
                   setSelectedAnswers({});
                   handleGenerate();
                 }}
-                className="px-4 py-2 rounded-lg bg-charcoal-800 hover:bg-charcoal-700 text-gold-light text-xs font-medium border border-charcoal-700 transition-colors"
+                className="w-full sm:w-auto px-4 py-2 rounded-lg bg-charcoal-800 hover:bg-charcoal-700 text-gold-light text-xs font-medium border border-charcoal-700 transition-colors text-center"
               >
                 Try Another Set
               </button>

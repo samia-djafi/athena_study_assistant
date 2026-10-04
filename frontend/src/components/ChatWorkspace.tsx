@@ -170,49 +170,55 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
   return (
     <div className="flex-1 flex flex-col h-screen bg-charcoal-950 overflow-hidden">
       {/* Top Controls Bar */}
-      <header className="h-14 border-b border-charcoal-800 bg-charcoal-900/60 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="text-xs font-medium text-charcoal-400">Level:</div>
-          <div className="flex bg-charcoal-850 rounded-md p-0.5 border border-charcoal-700">
-            {(['beginner', 'intermediate', 'advanced'] as LearningLevel[]).map((lvl) => (
-              <button
-                key={lvl}
-                onClick={() => setLevel(lvl)}
-                className={`text-xs px-2.5 py-1 rounded capitalize font-medium transition-all ${
-                  level === lvl
-                    ? 'bg-charcoal-700 text-gold-light shadow-sm'
-                    : 'text-charcoal-400 hover:text-charcoal-200'
-                }`}
-              >
-                {lvl}
-              </button>
-            ))}
+      <header className="border-b border-charcoal-800 bg-charcoal-900/60 px-3 sm:px-6 py-2 sm:h-14 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] sm:text-xs font-medium text-charcoal-400">Level:</span>
+            <div className="flex bg-charcoal-850 rounded-md p-0.5 border border-charcoal-700">
+              {(['beginner', 'intermediate', 'advanced'] as LearningLevel[]).map((lvl) => (
+                <button
+                  key={lvl}
+                  onClick={() => setLevel(lvl)}
+                  className={`text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded capitalize font-medium transition-all ${
+                    level === lvl
+                      ? 'bg-charcoal-700 text-gold-light shadow-sm'
+                      : 'text-charcoal-400 hover:text-charcoal-200'
+                  }`}
+                >
+                  <span className="hidden sm:inline">{lvl}</span>
+                  <span className="sm:hidden">{lvl === 'beginner' ? 'Beg' : lvl === 'intermediate' ? 'Int' : 'Adv'}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="h-4 w-[1px] bg-charcoal-700 mx-1" />
+          <div className="h-4 w-[1px] bg-charcoal-700 hidden sm:block mx-1" />
 
-          <div className="text-xs font-medium text-charcoal-400">Depth:</div>
-          <div className="flex bg-charcoal-850 rounded-md p-0.5 border border-charcoal-700">
-            {(['short', 'standard', 'detailed'] as ExplanationDepth[]).map((d) => (
-              <button
-                key={d}
-                onClick={() => setDepth(d)}
-                className={`text-xs px-2.5 py-1 rounded capitalize font-medium transition-all ${
-                  depth === d
-                    ? 'bg-charcoal-700 text-gold-light shadow-sm'
-                    : 'text-charcoal-400 hover:text-charcoal-200'
-                }`}
-              >
-                {d}
-              </button>
-            ))}
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] sm:text-xs font-medium text-charcoal-400">Depth:</span>
+            <div className="flex bg-charcoal-850 rounded-md p-0.5 border border-charcoal-700">
+              {(['short', 'standard', 'detailed'] as ExplanationDepth[]).map((d) => (
+                <button
+                  key={d}
+                  onClick={() => setDepth(d)}
+                  className={`text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded capitalize font-medium transition-all ${
+                    depth === d
+                      ? 'bg-charcoal-700 text-gold-light shadow-sm'
+                      : 'text-charcoal-400 hover:text-charcoal-200'
+                  }`}
+                >
+                  <span className="hidden sm:inline">{d}</span>
+                  <span className="sm:hidden">{d === 'short' ? 'Short' : d === 'standard' ? 'Std' : 'Detail'}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setRequireSearch(!requireSearch)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs border transition-colors ${
+            className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs border transition-colors ${
               requireSearch
                 ? 'bg-gold/15 text-gold-light border-gold/40'
                 : 'bg-charcoal-850 text-charcoal-400 border-charcoal-700 hover:text-charcoal-200'
@@ -226,13 +232,13 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
       </header>
 
       {/* Message Feed */}
-      <div className="flex-1 overflow-y-auto px-4 md:px-12 py-6 space-y-6">
+      <div className="flex-1 overflow-y-auto px-3 sm:px-6 md:px-12 py-4 sm:py-6 space-y-4 sm:space-y-6">
         {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto py-12">
+          <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto py-8 sm:py-12 px-2">
             <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/30 flex items-center justify-center text-gold mb-4">
               <GraduationCap className="w-6 h-6" />
             </div>
-            <h2 className="text-lg font-semibold text-charcoal-100 mb-1">
+            <h2 className="text-base sm:text-lg font-semibold text-charcoal-100 mb-1">
               Welcome to Athena Study Assistant
             </h2>
             <p className="text-xs text-charcoal-400 mb-6 leading-relaxed">
@@ -240,7 +246,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
               Select your level and depth above, ask any algorithmic concept, debug code, or request a practice quiz.
             </p>
 
-            <div className="grid grid-cols-2 gap-2 w-full text-left">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full text-left">
               {[
                 'Explain Binary Search Trees with Big-O complexity',
                 'How does Transformer Scaled Dot-Product Attention work?',
@@ -250,7 +256,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
                 <button
                   key={i}
                   onClick={() => setInput(suggestion)}
-                  className="p-2.5 rounded-lg border border-charcoal-800 bg-charcoal-900/40 text-xs text-charcoal-300 hover:bg-charcoal-800 hover:text-gold-light hover:border-gold/30 transition-all"
+                  className="p-2.5 rounded-lg border border-charcoal-800 bg-charcoal-900/40 text-xs text-charcoal-300 hover:bg-charcoal-800 hover:text-gold-light hover:border-gold/30 transition-all leading-snug"
                 >
                   {suggestion}
                 </button>
@@ -361,22 +367,22 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
       </div>
 
       {/* Input Area */}
-      <footer className="p-4 border-t border-charcoal-800 bg-charcoal-900/80">
+      <footer className="p-2 sm:p-4 border-t border-charcoal-800 bg-charcoal-900/90 flex-shrink-0">
         <div className="max-w-3xl mx-auto">
           {imageFile && (
             <div className="mb-2 flex items-center gap-2 p-1.5 bg-charcoal-800 border border-gold/30 rounded-md text-xs text-gold-light">
-              <Image className="w-4 h-4 text-gold" />
-              <span>Image attached for multimodal analysis</span>
+              <Image className="w-4 h-4 text-gold flex-shrink-0" />
+              <span className="truncate">Image attached</span>
               <button
                 onClick={() => setImageFile(null)}
-                className="ml-auto text-charcoal-400 hover:text-red-400"
+                className="ml-auto text-charcoal-400 hover:text-red-400 p-0.5"
               >
                 ✕
               </button>
             </div>
           )}
 
-          <div className="flex items-end gap-2 bg-charcoal-850 border border-charcoal-700 focus-within:border-gold/50 rounded-xl p-2 transition-colors">
+          <div className="flex items-end gap-1.5 sm:gap-2 bg-charcoal-850 border border-charcoal-700 focus-within:border-gold/50 rounded-xl p-1.5 sm:p-2 transition-colors">
             <input
               type="file"
               ref={fileInputRef}
@@ -386,8 +392,8 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-2 text-charcoal-400 hover:text-gold-light transition-colors rounded-lg hover:bg-charcoal-800"
-              title="Upload image, diagram, or error screenshot"
+              className="p-1.5 sm:p-2 text-charcoal-400 hover:text-gold-light transition-colors rounded-lg hover:bg-charcoal-800 flex-shrink-0"
+              title="Upload image or screenshot"
             >
               <Image className="w-4 h-4" />
             </button>
@@ -401,15 +407,15 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
                   handleSend();
                 }
               }}
-              placeholder="Ask an AI/CS concept, paste code to review, or request a quiz..."
+              placeholder="Ask an AI/CS concept, paste code, or request a quiz..."
               rows={1}
-              className="flex-1 bg-transparent resize-none text-xs text-charcoal-100 placeholder-charcoal-500 focus:outline-none max-h-32 min-h-[28px] py-1 leading-normal"
+              className="flex-1 bg-transparent resize-none text-xs sm:text-sm text-charcoal-100 placeholder-charcoal-500 focus:outline-none max-h-32 min-h-[32px] py-1.5 leading-normal"
             />
 
             <button
               onClick={handleSend}
               disabled={(!input.trim() && !imageFile) || isGenerating}
-              className={`p-2 rounded-lg transition-all ${
+              className={`p-2 rounded-lg transition-all flex-shrink-0 ${
                 input.trim() || imageFile
                   ? 'bg-gold text-charcoal-950 hover:bg-gold-light shadow-sm'
                   : 'bg-charcoal-800 text-charcoal-600 cursor-not-allowed'
@@ -420,7 +426,7 @@ export const ChatWorkspace: React.FC<ChatWorkspaceProps> = ({
             </button>
           </div>
 
-          <div className="flex items-center justify-between mt-2 px-1 text-[11px] text-charcoal-500">
+          <div className="hidden sm:flex items-center justify-between mt-2 px-1 text-[11px] text-charcoal-500">
             <span>Press Enter to send, Shift+Enter for new line</span>
             <span className="flex items-center gap-1 text-[10px]">
               <ShieldCheck className="w-3 h-3 text-gold/70" />

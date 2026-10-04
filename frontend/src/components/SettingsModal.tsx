@@ -75,7 +75,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
 
         {/* Body */}
-        <div className="p-6 space-y-6 overflow-y-auto max-h-[75vh]">
+        <div className="p-4 sm:p-6 space-y-5 sm:space-y-6 overflow-y-auto max-h-[78vh]">
           {/* Pedagogical Defaults */}
           <div className="space-y-3">
             <h3 className="text-xs font-semibold text-charcoal-300 uppercase tracking-wider">
@@ -198,7 +198,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-charcoal-800 flex items-center justify-between bg-charcoal-850/60">
+        <div className="p-3 sm:p-4 border-t border-charcoal-800 flex flex-wrap items-center justify-between gap-2 bg-charcoal-850/60">
           {savedNotice ? (
             <span className="text-xs text-green-400 flex items-center gap-1 font-medium">
               <Check className="w-4 h-4" /> Preferences saved!
