@@ -193,7 +193,7 @@ For local development, Athena creates and manages `athena.db` using SQLite and `
 
 ## RAG & Knowledge Base Status Disclosure
 
-> **RAG UI prototype — backend not implemented.**
+> **RAG UI prototype - backend not implemented yet.**
 >
 > In accordance with the project specification:
 > - The Knowledge Base page is an interactive user interface prototype demonstrating document cards, file upload progress, and processing workflows.
