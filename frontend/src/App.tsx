@@ -9,6 +9,7 @@ import {
   Settings,
   GraduationCap
 } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 import { Sidebar } from './components/Sidebar';
 import { ChatWorkspace } from './components/ChatWorkspace';
 import { KnowledgeBase } from './components/KnowledgeBase';
@@ -289,6 +290,7 @@ export function App() {
         profile={profile}
         onProfileUpdated={loadProfile}
       />
+      <Analytics />
     </div>
   );
 }
